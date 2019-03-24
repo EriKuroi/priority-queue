@@ -33,16 +33,27 @@ class Node {
 
 	remove() {
 		if (this.parent) {
-			this.parent.removeChild(this);
+			this.parent.removeChild(this);			
 		}
 
 	}
 
-	swapParentsPart(mom, grandmom, side) {
-		console.log(side);
-		this.parent = grandmom;
-		this.left = mom;
+	swapParentsPart(mom, grandmom, side, bro) {
+		if (this.left) {};
+		if (this.right) {};
 		mom.setParent(this);
+		this.parent = grandmom;
+		if (grandmom) {};
+		if (bro) {
+			if (this.left === bro) {
+				this.right = mom;
+			} else {
+				this.left = mom;
+			}
+		} else {
+			this.left = mom;
+		}
+
 		if (side) {
 			grandmom[side] = this;
 		}
@@ -59,17 +70,22 @@ class Node {
 
 			if (bro) {
 				bro.setParent(this);
-				this.right = bro;
+				if (mom.right === this) {
+					this.left = bro;
+				} else {
+					this.right = bro;
+				}
+
 			}
 
 			if (grandmom && grandmom.left === mom) {
-				this.swapParentsPart(mom, grandmom, 'left');
+				this.swapParentsPart(mom, grandmom, 'left', bro);
 
 			} else if (grandmom) {
-				this.swapParentsPart(mom, grandmom, 'right');
+				this.swapParentsPart(mom, grandmom, 'right', bro);
 
 			} else {
-				this.swapParentsPart(mom, grandmom);
+				this.swapParentsPart(mom, grandmom, 0, bro);
 			}
 
 			mom.left = firstChild;
@@ -80,10 +96,15 @@ class Node {
 			if (secondChild) {
 				secondChild.parent = mom;
 			}
-
-
-
 		}
+	}
+
+	sizeCount() {
+		if (!this.left && !this.right) {
+			return 1;
+		} else {
+			return (this.left ? this.left.sizeCount() : 0) + (this.right ? this.right.sizeCount() : 0) + 1;
+		}		
 	}
 }
 
